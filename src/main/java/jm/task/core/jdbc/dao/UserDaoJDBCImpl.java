@@ -32,7 +32,7 @@ public class UserDaoJDBCImpl implements UserDao {
              Statement statement = conn.createStatement()) {
             statement.executeUpdate("DROP TABLE users");
         } catch (SQLException e) {
-            System.out.println("SQL error occur");
+            System.out.println("SQL error occured");
         }
     }
 
@@ -46,17 +46,18 @@ public class UserDaoJDBCImpl implements UserDao {
             preStmt.execute();
             System.out.println("User с именем " + name + " добавлен в базу данных");
         } catch (SQLException e) {
-            System.out.println("SQL error occure");
+            System.out.println("SQL error occured");
         }
     }
 
     @Override
     public void removeUserById(long id) {
         try (Connection conn = Util.connect();
-             Statement statement = conn.createStatement()){
-        statement.executeUpdate("DELETE FROM users WHERE id =" + id);
+             PreparedStatement preStmt = conn.prepareStatement("DELETE FROM users WHERE id = ?")){
+             preStmt.setLong(1, id);
+             preStmt.execute();
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.out.println("SQL error occured");
         }
     }
 
@@ -70,7 +71,7 @@ public class UserDaoJDBCImpl implements UserDao {
                 userList.add(new User(resultSet.getString(2), resultSet.getString(3), resultSet.getByte(4)));
             }
         } catch (SQLException e){
-            e.printStackTrace();
+            System.out.println("SQL error occured");
         }
         return userList;
     }
@@ -80,7 +81,7 @@ public class UserDaoJDBCImpl implements UserDao {
              Statement statement = conn.createStatement()) {
             statement.executeUpdate("DELETE FROM users");
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.out.println("SQL error occured");
         }
     }
 }
