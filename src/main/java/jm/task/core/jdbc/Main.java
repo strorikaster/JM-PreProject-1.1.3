@@ -5,14 +5,14 @@ public class Main {
 
     public static void main(String[] args) {
         UserServiceImpl serviceObject = new UserServiceImpl();
-        serviceObject.createUsersTable();
-        serviceObject.saveUser("Alex", "Ivanov", (byte)23);
-        serviceObject.saveUser("Ivan", "Petrov", (byte)20);
-        serviceObject.saveUser("Victor", "Sergeev", (byte)42);
-        serviceObject.saveUser("Sergei", "Sidorov", (byte)15);
-        System.out.println(serviceObject.getAllUsers());
-        serviceObject.cleanUsersTable();
-        serviceObject.dropUsersTable();
+          serviceObject.createUsersTable();
+          serviceObject.saveUser("Alex", "Ivanov", (byte)23);
+          serviceObject.saveUser("Ivan", "Petrov", (byte)20);
+          serviceObject.saveUser("Victor", "Sergeev", (byte)42);
+          serviceObject.saveUser("Sergei", "Sidorov", (byte)15);
+          System.out.println(serviceObject.getAllUsers());
+          serviceObject.cleanUsersTable();
+          serviceObject.dropUsersTable();
     }
 
 }
