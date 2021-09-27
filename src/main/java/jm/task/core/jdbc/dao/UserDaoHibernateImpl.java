@@ -2,6 +2,7 @@ package jm.task.core.jdbc.dao;
 
 import jm.task.core.jdbc.model.User;
 import jm.task.core.jdbc.util.Util;
+import org.hibernate.ObjectNotFoundException;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -43,12 +44,12 @@ public class UserDaoHibernateImpl implements UserDao {
             Session session = getSessionFactory().openSession();
             Transaction transaction = session.beginTransaction();
 
-            String sql = "DROP TABLE users";
+            String sql = "DELETE FROM users";
 
-            Query query = session.createSQLQuery(sql).addEntity(User.class);
-            query.executeUpdate();
-            transaction.commit();
-            session.close();
+            Query query = session.createSQLQuery(sql);
+                query.executeUpdate();
+                transaction.commit();
+                session.close();
         } catch (SQLGrammarException e){
             e.printStackTrace();
         }
@@ -66,11 +67,19 @@ public class UserDaoHibernateImpl implements UserDao {
 
     @Override
     public void removeUserById(long id) {
-        Session session = getSessionFactory().openSession();
-        Transaction tx1 = session.beginTransaction();
-        session.delete(session.get(User.class, id));
-        tx1.commit();
-        session.close();
+        try {
+            User user;
+            Session session = getSessionFactory().openSession();
+            Transaction tx1 = session.beginTransaction();
+            user = (User) session.load(User.class, id);
+            session.delete(user);
+            tx1.commit();
+            session.close();
+        } catch (ObjectNotFoundException ex) {
+            System.out.println("User not found or it no exist");
+        } catch (SQLGrammarException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
