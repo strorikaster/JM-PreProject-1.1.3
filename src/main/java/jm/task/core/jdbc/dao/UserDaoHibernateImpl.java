@@ -1,7 +1,6 @@
 package jm.task.core.jdbc.dao;
 
 import jm.task.core.jdbc.model.User;
-import jm.task.core.jdbc.util.Util;
 import org.hibernate.ObjectNotFoundException;
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -84,16 +83,27 @@ public class UserDaoHibernateImpl implements UserDao {
 
     @Override
     public List<User> getAllUsers() {
-        List<User> users = (List<User>)getSessionFactory().openSession().createQuery("From User").list();
+        List<User> users = null;
+        try {
+            users = (List<User>) getSessionFactory().openSession().createQuery("From User").list();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return users;
     }
 
     @Override
     public void cleanUsersTable() {
-        Session session = getSessionFactory().openSession();
-        Transaction tx1 = session.beginTransaction();
-        session.clear();
-        tx1.commit();
-        session.close();
+        try {
+            Session session = getSessionFactory().openSession();
+            session.beginTransaction();
+            List<?> instances = session.createCriteria(User.class).list();
+            for (Object obj : instances) {
+                session.delete(obj);
+            }
+            session.getTransaction().commit();
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
     }
 }

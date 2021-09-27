@@ -2,13 +2,9 @@ package jm.task.core.jdbc.util;
 
 import jm.task.core.jdbc.model.User;
 import org.hibernate.SessionFactory;
-import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.cfg.Environment;
-import org.hibernate.service.ServiceRegistryBuilder;
-
-import javax.imageio.spi.ServiceRegistry;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -57,18 +53,10 @@ public class Util {
                 settings.put(Environment.PASS, PASSWORD);
                 settings.put(Environment.DIALECT, "org.hibernate.dialect.MySQL5Dialect");
                 settings.put(Environment.SHOW_SQL, "true");
-
                 config.setProperties(settings);
                 config.addAnnotatedClass(User.class);
-
-//                StandardServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder()
-//                        .applySettings(config.getProperties()).build();
                 StandardServiceRegistryBuilder builder = new StandardServiceRegistryBuilder().applySettings(config.getProperties());
                 sessionFactory = config.buildSessionFactory(builder.build());
-
-
-                //sessionFactory = config.buildSessionFactory(serviceRegistry);
-
             } catch (Exception e) {
                 e.printStackTrace();
             }
