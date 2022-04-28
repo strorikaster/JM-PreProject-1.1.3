@@ -1,6 +1,8 @@
 package jm.task.core.jdbc.model;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
 @Table
 public class User {
@@ -17,7 +19,6 @@ public class User {
     private Byte age;
 
     public User() {
-
     }
 
     public User(String name, String lastName, Byte age) {
@@ -59,7 +60,7 @@ public class User {
     }
 
     @Override
-    public String toString() {
-        return (name + " " + lastName + " " + age);
+    public String toString(){
+        return "Имя: " + name + ", Фамилия: " + lastName + ", Возраст: " + age;
     }
 }

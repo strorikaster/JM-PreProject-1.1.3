@@ -5,36 +5,32 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class Util {
+
     // реализуйте настройку соеденения с БД
-    private static final String URL = "jdbc:mysql://localhost:3306/userdb";
-    private static final String MAIN_DB_ADMIN = "root";
-    private static final String PASSWORD = "2lKB$smH";
+    // Connect to MySQL
+    public static final Connection getMySQLConnection() throws SQLException,
+            ClassNotFoundException {
+        String hostName = "localhost";
+        String dbName = "user_db";
+        String userName = "root";
+        String password = "root";
 
-    public Util() {
+        return getMySQLConnection(hostName, dbName, userName, password);
     }
 
-    public static String getUrl() {
-        return URL;
-    }
+    public static final Connection getMySQLConnection(String hostName, String dbName,
+                                                String userName, String password) throws SQLException,
+            ClassNotFoundException {
+        // Declare the class Driver for MySQL DB
+        // This is necessary with Java 5 (or older)
+        // Java6 (or newer) automatically find the appropriate driver.
+        // If you use Java> 5, then this line is not needed.
+        Class.forName("com.mysql.cj.jdbc.Driver");
 
-    public static String getUser() {
-        return MAIN_DB_ADMIN;
-    }
+        String connectionURL = "jdbc:mysql://" + hostName + ":3306/" + dbName;
 
-    public static String getPassword() {
-        return PASSWORD;
-    }
-
-    public static Connection connect() {
-        Connection connection = null;
-        try {
-            connection = DriverManager.getConnection(getUrl(), getUser(), getPassword());
-//                if (connection != null) {
-//                   System.out.println("Connection ok");
-//                }
-            } catch (SQLException sqlEx) {
-                System.out.println("Connection failure! Please check username, password and url string");
-            }
-        return connection;
+        Connection conn = DriverManager.getConnection(connectionURL, userName,
+                password);
+        return conn;
     }
 }
