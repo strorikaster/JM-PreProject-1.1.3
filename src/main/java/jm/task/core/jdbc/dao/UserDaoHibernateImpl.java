@@ -1,11 +1,9 @@
 package jm.task.core.jdbc.dao;
 
 import jm.task.core.jdbc.model.User;
-import org.hibernate.ObjectNotFoundException;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
-import org.hibernate.exception.SQLGrammarException;
 
 import java.util.List;
 
@@ -19,39 +17,25 @@ public class UserDaoHibernateImpl implements UserDao {
 
     @Override
     public void createUsersTable() {
-        try {
             Session session = getSessionFactory().openSession();
             Transaction transaction = session.beginTransaction();
-
-            String sql = "CREATE TABLE IF NOT EXISTS users " +
+            Query query = session.createSQLQuery("CREATE TABLE IF NOT EXISTS users " +
                     "(id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY, " +
                     "name VARCHAR(50) NOT NULL, lastName VARCHAR(50) NOT NULL, " +
-                    "age TINYINT NOT NULL)";
-
-            Query query = session.createSQLQuery(sql).addEntity(User.class);
+                    "age TINYINT NOT NULL)").addEntity(User.class);
             query.executeUpdate();
             transaction.commit();
             session.close();
-        } catch (SQLGrammarException e) {
-            e.printStackTrace();
-        }
     }
 
     @Override
     public void dropUsersTable() {
-        try {
             Session session = getSessionFactory().openSession();
             Transaction transaction = session.beginTransaction();
-
-            String sql = "DELETE FROM users";
-
-            Query query = session.createSQLQuery(sql);
+            Query query = session.createSQLQuery("DELETE FROM users");
                 query.executeUpdate();
                 transaction.commit();
                 session.close();
-        } catch (SQLGrammarException e){
-            e.printStackTrace();
-        }
     }
 
     @Override
@@ -66,35 +50,25 @@ public class UserDaoHibernateImpl implements UserDao {
 
     @Override
     public void removeUserById(long id) {
-        try {
-            User user;
             Session session = getSessionFactory().openSession();
             Transaction tx1 = session.beginTransaction();
-            user = (User) session.load(User.class, id);
-            session.delete(user);
+            User user = (User) session.get(User.class, id);
+            if (user != null) {
+                session.delete(user);
+            }
             tx1.commit();
             session.close();
-        } catch (ObjectNotFoundException ex) {
-            System.out.println("User not found or it no exist");
-        } catch (SQLGrammarException e) {
-            e.printStackTrace();
-        }
     }
 
     @Override
     public List<User> getAllUsers() {
-        List<User> users = null;
-        try {
+        List<User> users;
             users = (List<User>) getSessionFactory().openSession().createQuery("From User").list();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
         return users;
     }
 
     @Override
     public void cleanUsersTable() {
-        try {
             Session session = getSessionFactory().openSession();
             session.beginTransaction();
             List<?> instances = session.createCriteria(User.class).list();
@@ -102,8 +76,5 @@ public class UserDaoHibernateImpl implements UserDao {
                 session.delete(obj);
             }
             session.getTransaction().commit();
-        } catch(Exception e) {
-            e.printStackTrace();
-        }
     }
 }

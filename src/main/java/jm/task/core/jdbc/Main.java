@@ -1,10 +1,11 @@
 package jm.task.core.jdbc;
+import jm.task.core.jdbc.service.UserService;
 import jm.task.core.jdbc.service.UserServiceImpl;
 
 public class Main {
 
     public static void main(String[] args) {
-        UserServiceImpl serviceObject = new UserServiceImpl();
+        UserService serviceObject = new UserServiceImpl();
           serviceObject.createUsersTable();
           serviceObject.saveUser("Alex", "Ivanov", (byte)23);
           serviceObject.saveUser("Ivan", "Petrov", (byte)20);
